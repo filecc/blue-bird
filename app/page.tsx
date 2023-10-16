@@ -3,10 +3,11 @@ import Image from 'next/image'
 import { cookies } from 'next/headers'
 import AuthButtonServer from './components/auth-button-server'
 import { redirect } from 'next/navigation'
-import AuthButton from './components/auth-button'
+
+
 
 export default async function Home() {
-  const supabase = createServerComponentClient({cookies})
+  const supabase = createServerComponentClient<Database>({cookies})
 
 
   const { data: { session }} = await supabase.auth.getSession()
