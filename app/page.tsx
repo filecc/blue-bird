@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import AuthButtonServer from "@/app/components/auth-button-server";
 import { redirect } from "next/navigation";
 import NewTweet from "./components/new-tweet";
-import Likes from "./components/likes";
 import Tweets from "./components/tweets";
 
 export const dynamic = 'force-dynamic'
