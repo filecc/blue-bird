@@ -4,6 +4,7 @@ import AuthButtonServer from "@/app/components/auth-button-server";
 import { redirect } from "next/navigation";
 import NewTweet from "./components/new-tweet";
 import Likes from "./components/likes";
+import Tweets from "./components/tweets";
 
 export default async function Home() {
   const supabase = createServerComponentClient<Database>({ cookies });
@@ -16,11 +17,14 @@ export default async function Home() {
     redirect("/login");
   }
 
+  const { data: { user }} = await supabase.auth.getUser()
+
   const { data } = await supabase
     .from("tweets")
     .select("*, author: profiles(*), likes(user_id)")
+    .order('created_at', {ascending: false})
 
-    const tweets =
+  const tweets =
     data?.map((tweet) => ({
       ...tweet,
       author: Array.isArray(tweet.author) ? tweet.author[0] : tweet.author,
@@ -31,18 +35,16 @@ export default async function Home() {
     })) ?? [];
 
   return (
-    <>
-      <NewTweet />
-      <AuthButtonServer />
-     {tweets.map(tweet => (
-      <div key={tweet.id}>
-        <p>
-          {tweet.author.name} {tweet.author.username}
-        </p>
-        <p>{tweet.title}</p>
-        <Likes tweet={tweet} />
+    <div className="text-white w-full max-w-xl mx-auto">
+      <div className="flex justify-between px-4 py-6 border border-gray-800 border-t-0">
+        <h1 className="text-xl font-bold">Home</h1>
+        <AuthButtonServer />
       </div>
-     ))}
-    </>
+      <NewTweet user={session.user} />
+
+      <Tweets tweets={tweets} />
+
+      
+    </div>
   );
 }
