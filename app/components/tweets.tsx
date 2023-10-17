@@ -10,12 +10,16 @@ export default function Tweets({ tweets }: { tweets: TweetWithAuthor[] }) {
   const supabase = createClientComponentClient();
 
   useEffect(() => {
+
+    
+
     const channel = supabase
       .channel("realtime tweets")
       .on(
         "postgres_changes",
         {
           event: "*",
+          schema: 'public',
           table: "tweets",
         },
         (payload: any) => {
